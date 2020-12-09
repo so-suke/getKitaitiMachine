@@ -56,8 +56,6 @@ const machineNumbers = machines.reduce((prev, curr) => {
   return prev.concat(curr.numbers);
 }, []);
 
-// 今日の大当たり回数が0なら・前日の回転数も足したものを表示、対象とする。
-
 const getData = (machineNumber) => {
   const url = `https://daidata.goraggio.com/100428/detail?unit=${machineNumber}`;
   return new Promise((resolve, reject) => {
@@ -74,9 +72,7 @@ const getData = (machineNumber) => {
         kaitenNumber += parseInt($($textGreens["0"]).text()); // 本日の回転数を足す
 
         if (atariNumberToday === 0) {
-          // const lastKaitenNumberYesterday = parseInt($("span:contains('前日最終スタート')").parent().next().text().slice(0, -7));
           const lastKaitenNumberYesterday = parseInt($($(".Text-Green")["1"]).text());
-          // console.log(lastKaitenNumberYesterday);
           kaitenNumber += lastKaitenNumberYesterday;
         }
 
