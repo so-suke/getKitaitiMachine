@@ -65,20 +65,22 @@ const getData = (machineNumber) => {
       }
       try {
         const $ = cheerio.load(body);
-        const machineTitle = $("#pachinkoTi>strong").text();
-        
-        const $textGreens = $(".Text-Green");
 
-        let kaitenNumber = 0;
-        kaitenNumber += parseInt($($textGreens["0"]).text()); // 本日の回転数を足す
-        
-        const atariNumberToday = parseInt($(".Text-Big25.Text-Red").text());
-        if (atariNumberToday === 0) {
-          const lastKaitenNumberYesterday = parseInt($($(".Text-Green")["1"]).text());
-          kaitenNumber += lastKaitenNumberYesterday;
+        const machineTitle = $("#pachinkoTi>strong").text();
+
+        const $jackpotNumbers = $(".Text-Red");
+        const $rotationNumbers = $(".Text-Green");
+
+        let rotationNumber = 0;
+
+        // 当日の回転数を足す、当日の当たり数が0なら、前日のものに対して同様の処理をする。（これを3回繰り返す）
+        for (let idx = 0; idx < 3; idx++) {
+          rotationNumber += parseInt($($rotationNumbers[String(idx)]).text());
+          const jackpotNumber = parseInt($($jackpotNumbers[String(idx)]).text());
+          if (jackpotNumber !== 0) break;
         }
 
-        console.log(`${machineTitle} ${kaitenNumber}回転`);
+        console.log(`${machineTitle} ${rotationNumber}回転`);
         resolve();
       } catch (e) {
         console.error(e);
