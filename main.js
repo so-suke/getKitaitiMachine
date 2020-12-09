@@ -64,13 +64,15 @@ const getData = (machineNumber) => {
         console.error(e);
       }
       try {
-        const $ = cheerio.load(body); //bodyの読み込み
+        const $ = cheerio.load(body);
         const machineTitle = $("#pachinkoTi>strong").text();
-        let kaitenNumber = 0;
-        const atariNumberToday = parseInt($(".Text-Big25.Text-Red").text()); // 本日の大当たり回数
+        
         const $textGreens = $(".Text-Green");
-        kaitenNumber += parseInt($($textGreens["0"]).text()); // 本日の回転数を足す
 
+        let kaitenNumber = 0;
+        kaitenNumber += parseInt($($textGreens["0"]).text()); // 本日の回転数を足す
+        
+        const atariNumberToday = parseInt($(".Text-Big25.Text-Red").text());
         if (atariNumberToday === 0) {
           const lastKaitenNumberYesterday = parseInt($($(".Text-Green")["1"]).text());
           kaitenNumber += lastKaitenNumberYesterday;
