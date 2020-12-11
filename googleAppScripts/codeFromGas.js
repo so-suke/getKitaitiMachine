@@ -1,7 +1,6 @@
 function sendLine(message) {
-  // LINEから取得したトークン
-  let tokenLine = "3yWTz4kNtQF4uZtmCrJBOszK0KocwezS8yPbpKabtv7";
-  let options = {
+  const tokenLine = "3yWTz4kNtQF4uZtmCrJBOszK0KocwezS8yPbpKabtv7";
+  const options = {
     method: "post",
     headers: {
       Authorization: "Bearer " + tokenLine,
@@ -11,7 +10,7 @@ function sendLine(message) {
     },
   };
 
-  let url = "https://notify-api.line.me/api/notify";
+  const url = "https://notify-api.line.me/api/notify";
   UrlFetchApp.fetch(url, options);
 }
 
@@ -28,8 +27,6 @@ function sendLineCore(message) {
     sendLineCore(message);
   }
 }
-
-let totalMessage = "\n";
 
 const machines = [
   {
@@ -86,13 +83,19 @@ const machineNumbers = machines.reduce((prev, curr) => {
   return prev.concat(curr.numbers);
 }, []);
 
-function getData(machineNumber) {
-  const url = "https://daidata.goraggio.com/100428/detail?unit=" + machineNumber;
-  return new Promise((resolve, reject) => {
-    const html = UrlFetchApp.fetch(url).getContentText("UTF-8");
+// const machineNumbers = [21, 22, 23, 24, 25, 147, 148, 198];
 
-    const $ = Cheerio.load(html);
+function getTotalMessage() {
+  let totalMessage = "\n";
+  const urls = machineNumbers.map((machineNumber) => {
+    return `https://daidata.goraggio.com/100428/detail?unit=${machineNumber}`;
+  });
 
+  const htmls = UrlFetchApp.fetchAll(urls);
+
+  htmls.forEach((html) => {
+    const htmlUtf8 = html.getContentText("UTF-8");
+    const $ = Cheerio.load(htmlUtf8);
     const machineTitle = $("#pachinkoTi>strong").text();
 
     const $jackpotNumbers = $(".Text-Red");
@@ -107,17 +110,12 @@ function getData(machineNumber) {
     }
 
     totalMessage += `${machineTitle} ${rotationNumber}回転\n`;
-
-    resolve();
   });
+
+  return totalMessage;
 }
 
-function scrape() {
-  (async () => {
-    for (let machineNumber of machineNumbers) {
-      await getData(machineNumber);
-    }
-    console.log(totalMessage);
-    sendLineCore(totalMessage);
-  })();
+function main() {
+  const totalMessage = getTotalMessage();
+  sendLineCore(totalMessage);
 }
