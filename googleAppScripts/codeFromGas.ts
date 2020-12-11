@@ -1,6 +1,8 @@
+const TRY_CNT_LIMIT_SEND_LINE = 3;
+
 function sendLine(message) {
   const tokenLine = "3yWTz4kNtQF4uZtmCrJBOszK0KocwezS8yPbpKabtv7";
-  const options = {
+  const options: any = {
     method: "post",
     headers: {
       Authorization: "Bearer " + tokenLine,
@@ -14,17 +16,15 @@ function sendLine(message) {
   UrlFetchApp.fetch(url, options);
 }
 
-let sendCnt = 0;
-
-function sendLineCore(message) {
-  try {
-    sendLine(message);
-
-    sendCnt++;
-    if (sendCnt === 3) return;
-  } catch (err) {
-    console.log(err);
-    sendLineCore(message);
+// ラインへのメッセージ送信処理を3回まで試みる。（成功した時点で終了する。）
+function sendLineTryUpTo(message, tryCntLimit) {
+  for (let tryCnt = 0; tryCnt < tryCntLimit; tryCnt++) {
+    try {
+      sendLine(message);
+      break;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 
@@ -85,7 +85,7 @@ const machineNumbers = machines.reduce((prev, curr) => {
 
 // const machineNumbers = [21, 22, 23, 24, 25, 147, 148, 198];
 
-function getTotalMessage() {
+function getTotalMessage(): string {
   let totalMessage = "\n";
   const urls = machineNumbers.map((machineNumber) => {
     return `https://daidata.goraggio.com/100428/detail?unit=${machineNumber}`;
@@ -101,7 +101,7 @@ function getTotalMessage() {
     const $jackpotNumbers = $(".Text-Red");
     const $rotationNumbers = $(".Text-Green");
 
-    let rotationNumber = 0;
+    let rotationNumber: number = 0;
 
     for (let idx = 0; idx < 3; idx++) {
       rotationNumber += parseInt($($rotationNumbers[String(idx)]).text());
@@ -116,6 +116,6 @@ function getTotalMessage() {
 }
 
 function main() {
-  const totalMessage = getTotalMessage();
-  sendLineCore(totalMessage);
+  const totalMessage: string = getTotalMessage();
+  sendLineTryUpTo(totalMessage, TRY_CNT_LIMIT_SEND_LINE);
 }
