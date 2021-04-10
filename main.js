@@ -1,34 +1,42 @@
 const request = require("request");
 const cheerio = require("cheerio");
 
-const machines = [
+var machines = [
   {
-    name: "Pぱちんこ仮面ﾗｲﾀﾞｰ轟音M6",
-    numbers: [21, 22, 23, 24, 25],
+    name: "南国育ち",
+    numbers: [461, 462, 463, 464, 465, 466],
   },
   {
-    name: "呪いの7日間2",
-    numbers: [41, 42, 43],
+    name: "アリア",
+    numbers: [24, 25],
+  },
+  {
+    name: "大海物語4SP",
+    numbers: [61, 62, 63, 64, 65, 66, 67, 68],
+  },
+  {
+    name: "ｴｳﾞｧｼﾄ、新生 決戦",
+    numbers: [91, 92],
   },
   {
     name: "劇場版まどか☆ﾏｷﾞｶ",
-    numbers: [91, 92, 93, 94],
+    numbers: [93, 94],
   },
   {
-    name: "新必殺仕置人TURBO",
-    numbers: [98, 99, 100],
+    name: "冬のｿﾅﾀ",
+    numbers: [97, 98, 99, 100],
   },
   {
-    name: "真･牙狼",
-    numbers: [101, 102, 103, 104],
+    name: "物語ｾｶﾝﾄﾞｼｰｽﾞﾝ",
+    numbers: [101, 102, 103, 104, 105],
   },
   {
-    name: "ｴｳﾞｧﾝｹﾞﾘｵﾝｼﾄ､新生決戦",
-    numbers: [105, 106, 107],
+    name: "ﾓﾝｷｰﾀｰﾝV",
+    numbers: [106, 107, 108],
   },
   {
-    name: "Pﾊｲｽｸｰﾙｵﾌﾞｻﾞﾃﾞｯﾄﾞ2",
-    numbers: [111, 112, 113],
+    name: "笑ｩせぇるすまん",
+    numbers: [109, 110],
   },
   {
     name: "無双3",
@@ -36,23 +44,47 @@ const machines = [
   },
   {
     name: "Pｳﾙﾄﾗｾﾌﾞﾝ超乱舞",
-    numbers: [126, 127, 128, 129, 130],
+    numbers: [128, 129, 130],
   },
   {
-    name: "ｺﾞﾙｺﾞ",
+    name: "真･牙狼",
+    numbers: [41, 42, 43],
+  },
+  {
+    name: "AKB48 桜LIGHT",
     numbers: [141, 142],
   },
   {
-    name: "結城友奈は勇者である",
-    numbers: [143, 144],
+    name: "わんわんﾊﾟﾗﾀﾞｲｽ",
+    numbers: [145, 146],
   },
   {
-    name: "PﾓﾓｷｭﾝｿｰﾄﾞMC",
-    numbers: [147, 148],
+    name: "戦国乙女6",
+    numbers: [128, 129],
+  },
+  {
+    name: "ﾓﾓｷｭﾝｿｰﾄﾞMC",
+    numbers: [186],
+  },
+  {
+    name: "P遠山の金さん2",
+    numbers: [188],
+  },
+  {
+    name: "ﾊｲｽｸｰﾙｵﾌﾞｻﾞﾃﾞｯﾄﾞ2",
+    numbers: [192],
   },
   {
     name: "ﾄﾞﾗﾑ海物語INｼﾞｬﾊﾟﾝ",
     numbers: [198],
+  },
+  {
+    name: "ﾓﾓｷｭﾝｿｰﾄﾞ甘",
+    numbers: [206],
+  },
+  {
+    name: "貞子 伽椰子 甘",
+    numbers: [218],
   },
 ];
 
