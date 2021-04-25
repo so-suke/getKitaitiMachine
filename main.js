@@ -11,31 +11,31 @@ var machines = [
     numbers: [24, 25],
   },
   {
-    name: "大海物語4SP",
+    name: "海SP",
     numbers: [61, 62, 63, 64, 65, 66, 67, 68],
   },
   {
-    name: "ｴｳﾞｧｼﾄ、新生 決戦",
+    name: "ｴｳﾞｧ甘",
     numbers: [91, 92],
   },
   {
-    name: "劇場版まどか☆ﾏｷﾞｶ",
+    name: "まどまぎ甘",
     numbers: [93, 94],
   },
   {
-    name: "冬のｿﾅﾀ",
+    name: "冬ソナ",
     numbers: [97, 98, 99, 100],
   },
   {
-    name: "物語ｾｶﾝﾄﾞｼｰｽﾞﾝ",
+    name: "物語2nd",
     numbers: [101, 102, 103, 104, 105],
   },
   {
-    name: "ﾓﾝｷｰﾀｰﾝV",
+    name: "モンキー",
     numbers: [106, 107, 108],
   },
   {
-    name: "笑ｩせぇるすまん",
+    name: "笑う",
     numbers: [109, 110],
   },
   {
@@ -43,56 +43,56 @@ var machines = [
     numbers: [121, 122, 123, 124, 125],
   },
   {
-    name: "Pｳﾙﾄﾗｾﾌﾞﾝ超乱舞",
-    numbers: [128, 129, 130],
-  },
-  {
-    name: "真･牙狼",
-    numbers: [41, 42, 43],
-  },
-  {
-    name: "AKB48 桜LIGHT",
-    numbers: [141, 142],
-  },
-  {
-    name: "わんわんﾊﾟﾗﾀﾞｲｽ",
-    numbers: [145, 146],
-  },
-  {
-    name: "戦国乙女6",
+    name: "乙女6",
     numbers: [128, 129],
   },
   {
-    name: "ﾓﾓｷｭﾝｿｰﾄﾞMC",
+    name: "牙狼",
+    numbers: [41, 42, 43],
+  },
+  {
+    name: "AKB甘",
+    numbers: [141, 142],
+  },
+  {
+    name: "わんﾊﾟﾗ",
+    numbers: [145, 146],
+  },
+  {
+    name: "ﾓﾓｷｭﾝ199",
     numbers: [186],
   },
   {
-    name: "P遠山の金さん2",
+    name: "金さん",
     numbers: [188],
   },
   {
-    name: "ﾊｲｽｸｰﾙｵﾌﾞｻﾞﾃﾞｯﾄﾞ2",
+    name: "hotd",
     numbers: [192],
   },
   {
-    name: "ﾄﾞﾗﾑ海物語INｼﾞｬﾊﾟﾝ",
+    name: "超乱舞",
+    numbers: [197],
+  },
+  {
+    name: "ﾄﾞﾗﾑ海",
     numbers: [198],
   },
   {
-    name: "ﾓﾓｷｭﾝｿｰﾄﾞ甘",
+    name: "ﾓﾓｷｭﾝ甘",
     numbers: [206],
   },
   {
-    name: "貞子 伽椰子 甘",
+    name: "貞 伽椰 甘",
     numbers: [218],
+  },
+  {
+    name: "ガンツ",
+    numbers: [134, 135, 136, 137, 138],
   },
 ];
 
-const machineNumbers = machines.reduce((prev, curr) => {
-  return prev.concat(curr.numbers);
-}, []);
-
-const getData = (machineNumber) => {
+const getData = (machineName, machineNumber) => {
   const url = `https://daidata.goraggio.com/100428/detail?unit=${machineNumber}`;
   return new Promise((resolve, reject) => {
     request(url, (e, response, body) => {
@@ -101,8 +101,6 @@ const getData = (machineNumber) => {
       }
       try {
         const $ = cheerio.load(body);
-
-        const machineTitle = $("#pachinkoTi>strong").text();
 
         const $jackpotNumbers = $(".Text-Red");
         const $rotationNumbers = $(".Text-Green");
@@ -116,7 +114,7 @@ const getData = (machineNumber) => {
           if (jackpotNumber !== 0) break;
         }
 
-        console.log(`${machineTitle} ${rotationNumber}回転`);
+        console.log(`${machineNumber}番台 ${machineName} ${rotationNumber}回転`);
         resolve();
       } catch (e) {
         console.error(e);
@@ -127,7 +125,9 @@ const getData = (machineNumber) => {
 };
 
 (async () => {
-  for (let machineNumber of machineNumbers) {
-    await getData(machineNumber);
+  for (const machine of machines) {
+    for (const machineNumber of machine.numbers) {
+      await getData(machine.name, machineNumber);
+    }
   }
 })();
